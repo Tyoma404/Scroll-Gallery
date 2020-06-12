@@ -27,12 +27,15 @@ var intersectionObserver = new IntersectionObserver(onObserve, {
 
 
 async function lazyLoad() {
-  const result = await fetchData(state.loadedPages, PAGE_SIZE);
+  const result = await fetchData(state.loadedPages, PAGE_SIZE).catch(alert)
   
+
+
+  if (result) {
   console.log("fetched+3")
   console.log(result)
-  
   render(result)
+  }
 }
 
 function onObserve(entries) {         
@@ -72,19 +75,36 @@ items.forEach((val) => intersectionObserver.observe(val))
 
 const fetchData = (page, pageSize) => {
   let promise = new Promise(function(resolve, reject){
-    if (page + pageSize <= data.length){
-      state.loadedPages += pageSize
+
+  let possibleCut = data.length - page
+
+pageSize = possibleCut >= pageSize ? pageSize : possibleCut
+
+if (page !== data.length) {
+
+    state.loadedPages += pageSize
       resolve(data.slice(page, page+pageSize)); 
-    }
-    else {
-      if (data.length-page !== 0){
-        state.loadedPages += (data.length-page)
-        resolve(data.slice(page, page + (data.length-page)))
-      }
-      else reject(new Error("Nothing more"))
-    }
-  });
-  promise.catch((err)=>console.log(err))
+}
+
+reject(new Error("Nothing more"))
+  }
+  )
+
+  //   if (page + pageSize <= data.length){
+  //     state.loadedPages += pageSize
+  //     resolve(data.slice(page, page+pageSize)); 
+  //   }
+  //   else {
+  //     if (data.length-page !== 0){
+  //       state.loadedPages += (data.length-page)
+  //       resolve(data.slice(page, page + (data.length-page)))
+  //     }
+  //     else reject(new Error("Nothing more"))
+  //   }
+  // });
+
+
+  
   return promise;
 }  
 
