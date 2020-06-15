@@ -25,12 +25,20 @@ var intersectionObserver = new IntersectionObserver(onObserve, {
   threshold: 0.6
 })
 
+function debounce(f, t) {
+  return function (args) {
+    let previousCall = this.lastCall;
+    this.lastCall = Date.now();
+    if (previousCall && ((this.lastCall - previousCall) <= t)) {
+      clearTimeout(this.lastCallTimer);
+    }
+    this.lastCallTimer = setTimeout(() => f(args), t);
+  }
+}
 
 async function lazyLoad() {
   const result = await fetchData(state.loadedPages, PAGE_SIZE).catch(alert)
   
-
-
   if (result) {
   console.log("fetched+3")
   console.log(result)
@@ -109,9 +117,8 @@ reject(new Error("Nothing more"))
 }  
 
 
-prev_btn.addEventListener('click', ()=> items[state.active-1]?.scrollIntoView())
-
-next_btn.addEventListener('click', async ()=>  items[state.active+1]?.scrollIntoView())
+prev_btn.addEventListener('click', debounce(()=> items[state.active-1]?.scrollIntoView(), 200))
+next_btn.addEventListener('click', debounce(()=> items[state.active+1]?.scrollIntoView(), 200))
 
 
 function activate(itemNumber) {
