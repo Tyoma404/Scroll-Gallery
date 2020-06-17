@@ -12,13 +12,14 @@
 var list = document.querySelector('.list')
 var items
 var indicators
+//var interval //interval for debounce
 var prev_btn = document.querySelector('.prev')
 var next_btn = document.querySelector('.next')
 var state = {active: 0, auth: null, loadedPages: 0}
 const PAGE_SIZE = 3;
 const TOTAL_ITEMS = 10;
 const data = Array.from(Array(TOTAL_ITEMS)).map((v, i) => `Картинка ${i+1}`);  // БД для запросов
-let renderData = []  // рез
+let renderData = []  // rendering items
 
 var intersectionObserver = new IntersectionObserver(onObserve, {
   root: list,
@@ -26,13 +27,10 @@ var intersectionObserver = new IntersectionObserver(onObserve, {
 })
 
 function debounce(f, t) {
-  return function (args) {
-    let previousCall = this.lastCall;
-    this.lastCall = Date.now();
-    if (previousCall && ((this.lastCall - previousCall) <= t)) {
-      clearTimeout(this.lastCallTimer);
-    }
-    this.lastCallTimer = setTimeout(() => f(args), t);
+     let interval
+  return function () {
+    clearTimeout(interval);
+    interval = setTimeout(() => f(), t);
   }
 }
 
