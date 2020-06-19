@@ -26,13 +26,50 @@ var intersectionObserver = new IntersectionObserver(onObserve, {
   threshold: 0.6
 })
 
-function debounce(f, t) {
-     let interval
-  return function () {
-    clearTimeout(interval);
-    interval = setTimeout(() => f(), t);
-  }
-}
+// function debounce(f, t) {
+//     let interval
+//   return function () {
+//     clearTimeout(interval);
+//     interval = setTimeout(() => f(), t);
+//   }
+// }
+
+function debounce(func, wait, immediate) {
+  var timeout = undefined;
+
+  // Эта функция выполняется, когда событие DOM вызвано.
+  return function executedFunction() {
+    // Сохраняем контекст this и любые параметры,
+    // переданные в executedFunction.
+    var context = this;
+    var args = arguments;
+
+    // Функция, вызываемая по истечению времени debounce.
+    var later = function later() {
+      // Нулевой timeout, чтобы указать, что debounce закончилась.
+      timeout = null;
+
+      // Вызываем функцию, если immediate !== true,
+      // то есть, мы вызываем функцию в конце, после wait времени.
+      if (!immediate) func.apply(context, args);
+    };
+
+    // Определяем, следует ли нам вызывать функцию в начале.
+    var callNow = immediate && !timeout;
+
+    // clearTimeout сбрасывает ожидание при каждом выполнении функции.
+    // Это шаг, который предотвращает выполнение функции.
+    clearTimeout(timeout);
+
+    // Перезапускаем период ожидания debounce.
+    // setTimeout возвращает истинное значение / truthy value
+    // (оно отличается в web и node)
+    timeout = setTimeout(later, wait);
+
+    // Вызываем функцию в начале, если immediate === true
+    if (callNow) func.apply(context, args);
+  };
+};
 
 async function lazyLoad() {
   const result = await fetchData(state.loadedPages, PAGE_SIZE).catch(alert)
@@ -115,8 +152,8 @@ reject(new Error("Nothing more"))
 }  
 
 
-prev_btn.addEventListener('click', debounce(()=> items[state.active-1]?.scrollIntoView(), 200))
-next_btn.addEventListener('click', debounce(()=> items[state.active+1]?.scrollIntoView(), 200))
+prev_btn.addEventListener('click', debounce(()=> items[state.active-1]?.scrollIntoView(), 200,true))
+next_btn.addEventListener('click', debounce(()=> items[state.active+1]?.scrollIntoView(), 200,true))
 
 
 function activate(itemNumber) {
