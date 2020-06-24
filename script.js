@@ -23,24 +23,26 @@ let renderData = []  // rendering items
 
 var intersectionObserver = new IntersectionObserver(onObserve, {
   root: list,
+  rootMargin: '0px',
   threshold: 0.6
 })
 
+
 // function debounce(f, t) {
 //     let interval
-//   return function () {
+  //   return function () {
 //     clearTimeout(interval);
 //     interval = setTimeout(() => f(), t);
 //   }
 // }
 
-function debounce(func, wait, immediate) {
+function debounce(func, wait, immediate) {     // функция в JS - first-class citizen статус значения, можн передавать куда угодно
   var timeout = undefined;
 
   // Эта функция выполняется, когда событие DOM вызвано.
   return function executedFunction() {
     // Сохраняем контекст this и любые параметры,
-    // переданные в executedFunction.
+    // переданные в executedFunction.   
     var context = this;
     var args = arguments;
 
