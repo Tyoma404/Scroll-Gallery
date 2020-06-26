@@ -74,7 +74,7 @@ function debounce(func, wait, immediate) {     // функция в JS - first-c
 };
 
 async function lazyLoad() {
-  const result = await fetchData(state.loadedPages, PAGE_SIZE).catch(alert)
+  const result = await fetchData(state.loadedPages, PAGE_SIZE).catch(console.log)
   
   if (result) {
   console.log("fetched+3")
