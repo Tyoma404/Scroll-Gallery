@@ -1,14 +1,3 @@
-/*
-Задачи: 
-1. Ленивая подгрузка добавляет +2 картинки слишком поздно. Сделать пораньше (сразу когда становится активен последний индикатор и картинка)
-2. Прятать кнопки next/prev чтобы не тыкали, пока подгружаются новые картинки.
-3. Остановить запросы когда кончится база (TOTAL_ITEMS) . На данный момент скрипт подгружаеть пустые элементы списка, 
-и делаются активными элементы, которых нет (порядок картинок путается).
-3.1. Для этого настроить промис в функции fetchData . Добавить возможность невыполнения промиса (reject)
-
-*/
-
-
 var list = document.querySelector('.list')
 var items
 var indicators
@@ -27,7 +16,7 @@ var intersectionObserver = new IntersectionObserver(onObserve, {
   threshold: 0.6
 })
 
-
+//General view of debounce function:
 // function debounce(f, t) {
 //     let interval
   //   return function () {
@@ -132,24 +121,18 @@ if (page !== data.length) {
 }
 
 reject(new Error("Nothing more"))
-  }
-  )
+  })
 
+  //Another version:
   //   if (page + pageSize <= data.length){
   //     state.loadedPages += pageSize
-  //     resolve(data.slice(page, page+pageSize)); 
-  //   }
+  //     resolve(data.slice(page, page+pageSize)); }
   //   else {
   //     if (data.length-page !== 0){
   //       state.loadedPages += (data.length-page)
-  //       resolve(data.slice(page, page + (data.length-page)))
-  //     }
-  //     else reject(new Error("Nothing more"))
-  //   }
-  // });
+  //       resolve(data.slice(page, page + (data.length-page)))}
+  //     else reject(new Error("Nothing more"))}});
 
-
-  
   return promise;
 }  
 
